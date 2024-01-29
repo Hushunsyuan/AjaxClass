@@ -9,7 +9,7 @@
 
 @section Scripts{
 <script>
-    function printSomething(data){
+    function show(data){
         const promise = new Promise(function (resolve, reject) {
             setTimeout(function () {
                 resolve(data)
@@ -18,12 +18,12 @@
         return promise;
     }
 
-    printSomething('A').then(data => {
+        show('A').then(data => {
         console.log(data)
-            return printSomething('B')
+            return show('B')
     }).then(data => {
             console.log(data)
-            return printSomething('C')
+            return show('C')
     }).then(data => {
             console.log(data)
     }).finally(() => {
