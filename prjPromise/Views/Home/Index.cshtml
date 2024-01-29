@@ -18,16 +18,24 @@
         return promise;
     }
 
-        show('A').then(data => {
-        console.log(data)
-            return show('B')
-    }).then(data => {
-            console.log(data)
-            return show('C')
-    }).then(data => {
-            console.log(data)
-    }).finally(() => {
-        console.log('END')
-    })
+    // show('A').then(data => {
+    //     console.log(data)
+    //     return show('B')
+    // }).then(data => {
+    //     console.log(data)
+    //     return show('C')
+    // }).then(data => {
+    //     console.log(data)
+    // }).finally(() => {
+    //     console.log('END')
+    // })
+        (async () => { 
+            let data = await show("A");
+            console.log(data);
+            data = await show("B");
+            console.log(data);
+            data = await show("C");
+            console.log(data);
+        })();
 </script>    
 }
