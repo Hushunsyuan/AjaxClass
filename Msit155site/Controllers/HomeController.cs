@@ -22,6 +22,10 @@ namespace Msit155site.Controllers
         {
             return View();
         }
+        public IActionResult travel()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

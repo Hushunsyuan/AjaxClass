@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Travel";
+}
+<div id="travel" class="row row-cols-1 row-cols-md-3 g-4">
+</div>
+
+@section Scripts {
+    <script src="~/js/travel.js"></script>
+    <script>
+        console.log(spots.CommonFormat.Section);
+        const travelCont = document.getElementById("travel");
+        const sportsmap = spots.CommonFormat.Section.map(spot => {
+            // 確保 imgData 有一個值，即使 img 是未定義或 null
+            const imgData = spot.file.img || {};
+            // 確認 imgData 是陣列或物件
+            const imgArray = Array.isArray(imgData) ? imgData : [imgData];
+            // 取得第一個圖片的 text 屬性
+            const imgUrl = imgArray.length > 0 && imgArray[0].text ? imgArray[0].text : '';
+            return `
+                <div class="col">
+                    <div class="card h-100">
+                    <img class="card-img-top" src="${imgUrl}" alt="${spot.stitle}">
+                        <div class="card-body">
+                            <h5 class="card-title">${spot.stitle}</h5>
+                            <p class="card-text">${spot.xbody}</p>
+                        </div>
+                        <div class="card-footer">
+                        <small class="text-muted">${spot.address}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        travelCont.innerHTML = sportsmap;
+    </script>
+}
+
