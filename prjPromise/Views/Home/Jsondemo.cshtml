@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "Jsondemo";
+}
+
+<h1>Jsondemo</h1>
+<ul id="A"></ul>
+@section Scripts{
+<script>
+        const emp = {
+            "employees": [
+                { "name": "Tom", "workYears": 3, "salary": 35000 },
+                { "name": "Jack", "workYears": 5, "salary": 40000 },
+                { "name": "Mary", "workYears": 7, "salary": 45000 }
+            ]
+        };
+        const uiA= document.getElementById("A");
+        const liEmaps = emp.employees.map(empA =>
+            `<li>name ${empA.name} workYears ${empA.workYears}  Salary: ${empA.salary})</li>`);
+    uiA.innerHTML = liEmaps.join("");
+</script>
+}

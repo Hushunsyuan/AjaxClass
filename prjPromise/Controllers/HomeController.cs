@@ -17,6 +17,10 @@ namespace prjPromise.Controllers
         {
             return View();
         }
+        public IActionResult Jsondemo()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
