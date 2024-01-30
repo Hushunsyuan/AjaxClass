@@ -29,7 +29,15 @@ namespace Msit155site.Controllers
             {
                 _user.Name = "guest";
             }
-            return Content($"Hello {_user.Name},{_user.Age}歲,電子郵件是{_user.Email}","text/plan", Encoding.UTF8);
+            return Content($"Hello {_user.Name}, {_user.Age}歲了，電子郵件是{_user.Email}","text/plan", Encoding.UTF8);
+        }
+        public IActionResult CheckAccountAction(string name)
+        {
+            if (_context.Members.Count(p => p.Name == name) != 0)
+            {
+                return Content("帳號已存在");
+            }
+            else { return Content("帳號可使用"); }
         }
       [HttpPost]
         public IActionResult Cities()
