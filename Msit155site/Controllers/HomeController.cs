@@ -17,7 +17,10 @@ namespace Msit155site.Controllers
         {
             return View();
         }
-
+        public IActionResult First()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

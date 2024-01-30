@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "First";
+}
+
+<h1>First Ajax Demo</h1>
+<input type="button" class="btn-primary mb-3" value="Ajax start" id="btnStart"/>
+<div class="alert alert-info" id="divInfo"></div>
+@section Scripts{
+    <script>
+        const btnStart = document.querySelector('#btnStart');
+        const divInfo = document.querySelector('#divInfo');
+        btnStart.addEventListener('click', () => {
+            //Ajax
+           //console.log(fetch("/Api/index"))
+            fetch("/Api/index")
+                .then(response => {
+                    // console.log(response); //{}
+                    // console.log(response.text()); //Promise
+                    return response.text(); //從Body中取出文字
+                })
+                .then(Result => {
+                    console.log(Result);
+                    divInfo.innerHTML = Result;
+                })
+        })
+    </script>
+}
+
