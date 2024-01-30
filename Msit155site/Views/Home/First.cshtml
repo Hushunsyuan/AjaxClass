@@ -4,25 +4,76 @@
 }
 
 <h1>First Ajax Demo</h1>
-<input type="button" class="btn-primary mb-3" value="Ajax start" id="btnStart"/>
+<input type="button" class="btn-primary mb-3" value="開始" id="btnStart"/>
+<input type="button" class="btn-primary mb-3" value="結束" id="btnStop" />
+<img src="~/images/Ghost.gif" style="display:none" id="img1"/>
 <div class="alert alert-info" id="divInfo"></div>
 @section Scripts{
     <script>
         const btnStart = document.querySelector('#btnStart');
+        const btnStop = document.querySelector('#btnStop');
         const divInfo = document.querySelector('#divInfo');
-        btnStart.addEventListener('click', () => {
-            //Ajax
-           //console.log(fetch("/Api/index"))
-            fetch("/Api/index")
-                .then(response => {
-                    // console.log(response); //{}
-                    // console.log(response.text()); //Promise
-                    return response.text(); //從Body中取出文字
-                })
-                .then(Result => {
-                    console.log(Result);
-                    divInfo.innerHTML = Result;
-                })
+        const imgLoader = document.querySelector('#img1');
+        let abortController;
+        //停止AJax程式的執行
+        btnStop.addEventListener('click',()=> {
+            if(abortController) {
+                abortController.abort();
+            }
+        })
+        btnStart.addEventListener('click', async()=> {
+            try {
+                //顯示執行中的圖片
+                imgLoader.style.display = "inline";
+                //disable btn
+                btnStart.setAttribute('disabled', 'disabled');
+                btnStart.ariaValueMax = "執行中..";
+                abortController = new AbortController();
+                const signal = abortController.signal;
+                setTimeout(() => {
+                    abortController.abort();
+                },5000)
+                const response = await fetch('@Url.Content("/Api/index")', {signal});
+                if (!response.ok) {
+                 throw new Error(`錯誤狀態碼:${response.status}`);
+                 }
+                const data = await response.text();
+                divInfo.innerHTML = `<h2>${data}</h2>`;
+            }
+            catch(error){
+                let message = error.message;
+                if (error.name === "AbortError") {
+                    message = "伺服器忙線中，請稍後再試"
+                }
+                divInfo.innerHTML = `<h2>${message}</h2>`;
+            }
+            finally { console.log('finally');
+            //隱藏執行中的圖示
+                imgLoader.style.display = "none";
+                btnStart.removeAttribute('disabled');
+                btnStart.Value = "開始";
+            }
+           //  //Ajax
+           // //console.log(fetch("/Api/index"))
+           //  fetch('@Url.Content("/Api/index")')
+           //      .then(response => {
+           //          if (!response.ok) {
+           //              throw new Error(`錯誤狀態碼:${response.status}`);
+           //          }
+           //          // console.log(response); //{}
+           //          // console.log(response.text()); //Promise物件
+           //          //讀取response header的資料
+           //          response.headers.forEach((value, name) => {
+           //              console.log(`${name}:${value}`)
+           //          })
+           //          console.log(response.headers.get('Content-Length'));
+           //          console.log(`OK:${response.ok}`);
+           //          return response.text(); //從Body中取出文字
+           //      })
+           //      .then(Result => {
+           //          console.log(Result);
+           //          divInfo.innerHTML = `<h2>${Result}</h2>`;
+           //      })
         })
     </script>
 }
