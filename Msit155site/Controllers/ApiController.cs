@@ -39,7 +39,7 @@ namespace Msit155site.Controllers
             }
             else { return Content("帳號可使用"); }
         }
-      [HttpPost]
+        //[HttpPost]範例留用
         public IActionResult Cities()
         {
             var Cities = _context.Addresses.Select(p => p.City).Distinct();
