@@ -20,7 +20,7 @@
 				<input type="number" class="form-control" id="userAge" name="Age">
 			</div>
 
-			<button id="button1" type="button" class="btn btn-primary">送出</button>
+			<button id="button1" type="submit" class="btn btn-primary">送出</button>
 		</form>
 		<div class="alert alert-info" id="div1"></div>
 	</div>
@@ -30,7 +30,7 @@
 @section Scripts {
 	<script>
 		const username = document.querySelector("#userName");
-		const div = document.querySelector("#divWarning");
+		const div1 = document.querySelector("#divWarning");
 		const useremail = document.querySelector("#userEmail");
 		const userage = document.querySelector("#userAge");
 		const btn = document.querySelector("#button1");
@@ -40,16 +40,14 @@
 			const url = `@Url.Content("~/Api/CheckAccountAction")?name=${name}`;
 			const response = await fetch(url);
 			const data = await response.text();
-			div.innerHTML = data;
+			div1.innerHTML = data;
 			console.log(data);
 
 		});
 		//DIV2
-		btn.addEventListener('click', async () => {
-			const nameA = username.value;
-			const age = parseInt(userage.value, 10);
-			const email = useremail.value;
-			const url = `@Url.Content("~/Api/Register")?name=${nameA}&age=${age}&email=${email}`;
+		btn.addEventListener('click', async (even) => {
+			even.preventDefault();//停止預設行為submit
+			const url = `@Url.Content("~/Api/Register")?name=${username.value}&age=${userage.value}&email=${useremail.value}`;
 			const response = await fetch(url);
 			const data = await response.text();
 			div2.innerHTML = data;

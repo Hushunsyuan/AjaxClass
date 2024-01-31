@@ -40,10 +40,23 @@ namespace Msit155site.Controllers
             else { return Content("帳號可使用"); }
         }
         //[HttpPost]範例留用
+        //讀取城市
         public IActionResult Cities()
         {
             var Cities = _context.Addresses.Select(p => p.City).Distinct();
             return Json(Cities);
+        }
+        //根據城市名稱讀取鄉鎮區
+        public IActionResult Districtes(string city)
+        {
+            var Districts = _context.Addresses.Where(a=>a.City==city).Select(d => d.SiteId).Distinct();
+            return Json(Districts);
+        }
+        //根據鄉鎮區名稱讀取路名
+        public IActionResult Roades(string district)
+        {
+            var Roades = _context.Addresses.Where(d => d.SiteId == district).Select(r => r.Road).Distinct();
+            return Json(Roades);
         }
         public IActionResult Avatar(int id = 1)
         {

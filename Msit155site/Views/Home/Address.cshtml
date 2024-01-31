@@ -4,18 +4,51 @@
 }
 
 <h1>Address</h1>
-<select id="select1"></select>
+<select id="selectCity"></select>
+<select id="selectDistrict"></select>
+<select id="selectRoad"></select>
 
 @section Scripts {
     <script>
-
+        const selCity = document.getElementById('selectCity');
+        const selDistrict = document.getElementById('selectDistrict');
+        const selRoad = document.getElementById('selectRoad');
         (async () => {
-            const selCity = document.getElementById('select1');
             const response = await fetch('@Url.Content("~/Api/Cities")');
             const datas = await response.json();
             const optCities = datas.map(city => `<option value=${city}>${city}</option>`);
+
             selCity.innerHTML = optCities.join("");
+            loadDistricts();
         })();
+        const loadDistricts = async () => {
+            //讀取city名稱
+            const city = selCity.options[selCity.selectedIndex].value;
+            const url = `@Url.Content("~/Api/Districtes")?city=${city}`;
+            const response = await fetch(url);
+            const datas = await response.json();
+            //讀取資料
+            const optDistricts = datas.map(district => `<option value=${district}>${district}</option>`);
+            //顯示資料
+            selDistrict.innerHTML = optDistricts.join("");
+            loadRoades();
+            console.log(datas);
+        }
+        const loadRoades = async () => {
+            //讀取road名稱
+
+            const district = selDistrict.options[selDistrict.selectedIndex].value;
+            const url = `@Url.Content("~/Api/Roades")?district=${district}`;
+            const response = await fetch(url);
+            const datas = await response.json();
+            //讀取資料
+            const optRoades = datas.map(Road => `<option value=${Road}>${Road}</option>`);
+            //顯示資料
+            selRoad.innerHTML = optRoades.join("");
+            console.log(datas);
+        }
+        selCity.addEventListener('change', loadDistricts);
+        selDistrict.addEventListener('change', loadRoades);
     </script>
 }
 
