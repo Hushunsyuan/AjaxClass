@@ -135,7 +135,55 @@ namespace Msit155site.Controllers
 		[HttpPost]
 		public IActionResult Spots([FromBody] SearchDTO _search)
 		{
-			return Json(_search);
+			//根據分類編號搜尋
+			var spots =_search.CategoryId==0?_context.SpotImagesSpots:_context.SpotImagesSpots.Where(s=>s.CategoryId==_search.CategoryId);
+			//根據關鍵字搜尋景點標題描述
+			if (!string.IsNullOrEmpty(_search.Keyword))
+            {
+                spots=spots.Where(s=>s.SpotTitle.Contains(_search.Keyword)||s.SpotDescription.Contains(_search.Keyword));
+            }
+			//排序
+			switch (_search.SortBy)
+			{
+                //依據景點標題排序
+				case "spotTitle":
+					spots = _search.SortType == "asc" ? spots.OrderBy(s => s.SpotTitle) : spots.OrderByDescending(s => s.SpotTitle);
+					break;
+				//依據景點CategoryId排序
+				case "categoryId":
+					spots = _search.SortType == "asc" ? spots.OrderBy(s => s.CategoryId) : spots.OrderByDescending(s => s.CategoryId);
+					break;
+				//預設依據spotId排序
+				default:
+					spots = _search.SortType == "asc" ? spots.OrderBy(s => s.SpotId) : spots.OrderByDescending(s => s.SpotId);
+					break;
+			}
+
+			//總共有幾筆
+			int totalCount = spots.Count();
+			//一頁幾筆資料
+			int pageSize = _search.PageSize ?? 9;
+			//計算總共有幾頁
+			int totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+			//目前第幾頁
+			int page = _search.Page ?? 1;
+			//分頁
+			spots = spots.Skip((page - 1) * pageSize).Take(pageSize);
+
+			//return Json(spots);
+
+			SpotsPagingDTO spotsPaging = new SpotsPagingDTO();
+			spotsPaging.TotalPages = totalPages;
+			spotsPaging.SpotsResult = spots.ToList();
+			return Json(spotsPaging);
+
 		}
-	}
+        public IActionResult SpotTitle(string title)
+        {
+            var titles = _context.Spots.Where(s => s.SpotTitle.Contains(title))
+                .Select(s => s.SpotTitle).Take(8);
+            return Json(titles);
+        }
+
+    }
 }

@@ -1,11 +1,26 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Spots";
 }
-
-<h1>Spots</h1>
-@section Scripts{
+<h1>台北市景點</h1>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" id="ul1">
+            </ul>
+        </nav>
+    </div>
+    <div class="col-3">
+        <input type="search" class="form-control" placeholder="景點搜尋" id="inputKeyword" />
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-4" id="travel">
+</div>
+@section Scripts {
     <script>
+        const div1 = document.querySelector('#travel');
+        const ulPaging = document.querySelector('#ul1');
+        const inpKeyword = document.querySelector('#inputKeyword');
         const searchData = {
             "categoryId": 0,
             "keyword": "北投",
@@ -22,7 +37,48 @@
             });
             const datas = await response.json();
             console.log(datas);
+
+            //讀資料、顯示資料
+            const divSpots = datas.spotsResult.map(spot => {
+                const { spotId, spotTitle, spotImage, address, spotDescription } = spot;
+                return (`
+                   <div class="col">
+                    <div class="card h-100">
+                   <img class="card-img-top" src="${spotImage}" alt="${spotTitle}">
+                    <div class="card-body">
+                       <h5 class="card-title">${spotTitle}</h5>
+                       <p class="card-text">${spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100)}</p>
+                   </div>
+                        <div class="card-footer">
+                       <small class="text-muted">${address}</small>
+                        </div>
+                    </div>
+                   </div>
+                                                `)
+            });
+
+            div1.innerHTML = divSpots.join("");
+            //分頁功能
+            let liPaging = "";
+            for (let i = 1, max = datas.totalPages; i <= max; i++) {
+                liPaging += ` <li class="page-item" onclick="pagingHandler(${i})"><a class="page-link" href="#">${i}</a></li>`
+            }
+            ulPaging.innerHTML = liPaging;
         };
+
+        const pagingHandler = page => {
+            searchData.page = page;
+            loadSpots();
+            }
+             //關鍵字搜尋
+        inpKeyword.addEventListener('keydown', event => {
+            // console.log(event.which); //Enter => 13
+            if (event.which === 13) {
+                searchData.keyword = event.target.value;
+                searchData.page = 1;
+                loadSpots();
+            }
+        });
         loadSpots();
 
     </script>
