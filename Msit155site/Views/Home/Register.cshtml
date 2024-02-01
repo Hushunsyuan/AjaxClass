@@ -16,10 +16,22 @@
 				<input type="email" class="form-control" id="userEmail" name="Email">
 			</div>
 			<div class="mb-3">
+				<label for="Password" class="form-label">密碼：</label>
+				<input type="password" class="form-control" id="Password" name="Password">
+			</div>
+			<div class="mb-3">
+				<label for="ConfirmPassword" class="form-label">密碼確認：</label>
+				<input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword">
+
+			</div>
+			<div class="mb-3">
 				<label for="userAge" class="form-label">年紀：</label>
 				<input type="number" class="form-control" id="userAge" name="Age">
 			</div>
-
+			<div class="mb-3">
+				<label for="formFile" class="form-label">頭像</label>
+				<input class="form-control" type="file" id="formFile" name="Photo">
+			</div>
 			<button id="button1" type="submit" class="btn btn-primary">送出</button>
 		</form>
 		<div class="alert alert-info" id="div1"></div>
@@ -31,8 +43,8 @@
 	<script>
 		const username = document.querySelector("#userName");
 		const div1 = document.querySelector("#divWarning");
-		const useremail = document.querySelector("#userEmail");
-		const userage = document.querySelector("#userAge");
+		// const useremail = document.querySelector("#userEmail");
+		// const userage = document.querySelector("#userAge");
 		const btn = document.querySelector("#button1");
 		const div2 = document.querySelector("#div1");
 		username.addEventListener('change', async () => {
@@ -47,11 +59,27 @@
 		//DIV2
 		btn.addEventListener('click', async (even) => {
 			even.preventDefault();//停止預設行為submit
-			const url = `@Url.Content("~/Api/Register")?name=${username.value}&age=${userage.value}&email=${useremail.value}`;
-			const response = await fetch(url);
+			//FormData
+			const formData = new FormData(document.querySelector('#userForm'));
+			//以下可以在foemdata Add額外的值
+			// formData.append("key", "123");
+			// //利用迴圈讀取Formdata中 的資料 範例
+			// for (const pair of formData.entries()) {
+			// 	console.log(pair[0]);
+			// 	console.log(pair[1]);
+			// }
+			const url = '@Url.Content("~/Api/Register")';
+			const response = await fetch(url, {
+				"method":"POST","body":formData
+			});
 			const data = await response.text();
 			div2.innerHTML = data;
-			console.log(data);
+			//以下註解為非用FormData實作方式
+			// const url = `@Url.Content("~/Api/Register")?name=${username.value}&age=${userage.value}&email=${useremail.value}`;
+			// const response = await fetch(url);
+			// const data = await response.text();
+			// div2.innerHTML = data;
+			// console.log(data);
 		});
 	</script>
 }
