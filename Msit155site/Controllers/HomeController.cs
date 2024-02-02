@@ -49,7 +49,10 @@ namespace Msit155site.Controllers
         {
             return View();
         }
-
+        public IActionResult Cors()
+        {
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
